@@ -1,13 +1,13 @@
 import * as moment from "moment";
-declare function require(path:string):any;
+declare function require(path: string): any;
 const grammar = require('./grammar.pegjs');
 
 function now() {
-	var now = moment();
-	return {
-		h:now.hour(), 
-		m:now.minutes()
-	}
+    var now = moment();
+    return {
+        h: now.hour(),
+        m: now.minutes()
+    }
 }
 
 
@@ -18,7 +18,7 @@ function processTimesheets(days) {
     const append = (obj, key, value) => {
         if (obj[key] === undefined) {
             obj[key] = value;
-        } else { 
+        } else {
             obj[key] += value;
         }
         return obj;
@@ -58,12 +58,7 @@ function processTimesheets(days) {
 
 
 export function parse(text) {
-    try {
-        const days = grammar.parse(text);
-        console.log(days);
-        return processTimesheets(days);
-    } catch (error) {
-        console.log(error);
-        return {error};
-    }
+    const days = grammar.parse(text);
+    console.log(days);
+    return processTimesheets(days);
 }
