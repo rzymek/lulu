@@ -1,9 +1,9 @@
-dev: build
+dev:build/index.html
 	yarn start
-
-build:
-	yarn build
+build/index.html:
 	rsync public/* build/
+build:build/index.html
+	yarn build
 	
 .ONESHELL:
 deploy: clean build

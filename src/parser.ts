@@ -48,9 +48,11 @@ function processTimesheets(days) {
             total += dayMinutes[label];
             dayMinutes[label] = hour(dayMinutes[label]);
         })
-        dayMinutes._day = day.day;
-        dayMinutes._total = hour(total);
-        return dayMinutes;
+        return {
+            entries: dayMinutes,
+            day: day.day,
+            total: hour(total)
+        };
     })
 }
 

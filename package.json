@@ -1,7 +1,11 @@
 {
-  "name": "text-timesheet",
+  "name": "lulu",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "build": "webpack -p",
+    "start": "webpack-dev-server --hot --inline"
+  },
   "devDependencies": {
     "@types/pegjs": "^0.10.0",
     "css-loader": "^0.26.1",
@@ -20,9 +24,5 @@
     "pegjs": "^0.10.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
-  },
-  "scripts": {
-    "build": "webpack",
-    "start": "webpack-dev-server --hot --inline"
   }
 }
