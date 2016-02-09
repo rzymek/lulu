@@ -1,3 +1,4 @@
+
 Timesheet
 	= first:Day next:("\n" _ Day)* { return [first, ...next.map(v=>v[2]).filter(v=>v)]}
 Day
@@ -6,7 +7,7 @@ Day
 Time
 	= h:Num ":" m:Minutes { return {h,m}}
 End
-	= "-" label:Label "-" end:Time  {return {label,end}}
+	= "-" label:Label "-" end:Time?  {return {label,end}}
 Label
     = label:[^-]+ "-" [(]breaks:SubEntries[)] {return {label:label.join(''), breaks}}
 	/ [^-(]*	{return {label:text()}}

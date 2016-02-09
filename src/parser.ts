@@ -1,6 +1,15 @@
-// declare module "./grammar.pegjs";
+import * as moment from "moment";
 declare function require(path:string):any;
 const grammar = require('./grammar.pegjs');
+
+function now() {
+	var now = moment();
+	return {
+		h:now.hour(), 
+		m:now.minutes()
+	}
+}
+
 
 function processTimesheets(days) {
     const pad = (m) => m < 10 ? '0' + m : m;
@@ -16,8 +25,9 @@ function processTimesheets(days) {
     }
     return days.filter(day => day).map(day => {
         day.ends.reduce((start, entry) => {
-            entry.min = minutes(entry.end) - minutes(start);
-            return entry.end
+            const end = entry.end || now()
+            entry.min = minutes(end) - minutes(start);
+            return end
         }, day.start);
         const dayMinutes = day.ends.map(entry => ({
             label: entry.label.label,
@@ -48,8 +58,10 @@ function processTimesheets(days) {
 export function parse(text) {
     try {
         const days = grammar.parse(text);
+        console.log(days);
         return processTimesheets(days);
     } catch (error) {
-        return error;
+        console.log(error);
+        return {error};
     }
 }

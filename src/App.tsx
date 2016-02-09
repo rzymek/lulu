@@ -10,7 +10,7 @@ class App extends React.Component<{}, { value: string }> {
   constructor() {
     super();
     this.state = {
-      value: ''
+      value: localStorage.getItem('value')
     }
     this.updateState = debounce(value => this.setState({ value }), 100);
     this.persist = debounce(value => localStorage.setItem("value", value), 1000);
@@ -23,7 +23,9 @@ class App extends React.Component<{}, { value: string }> {
   }
   render() {
     return <div>
-      <textarea style={{ width: '48%' }} rows={30}
+      <textarea rows={30}
+        style={{ width: '48%' }}
+        defaultValue={this.state.value}
         onChange={this.handleChange.bind(this)}>
       </textarea>
       <pre style={{ width: '48%', float: 'right' }}>
