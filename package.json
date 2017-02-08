@@ -20,8 +20,7 @@
     "react-dom": "^15.4.2"
   },
   "scripts": {
-    "build": "rm -rf build/* && webpack && rsync public/* build",
-    "deploy": "yarn build && git subtree push --prefix build/ origin gh-pages",
+    "build": "webpack",
     "start": "webpack-dev-server --hot --inline"
   }
 }
