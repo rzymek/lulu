@@ -1,3 +1,11 @@
+result = days:Timesheet { 
+	const minutes = (time) => time.h*60+time.m;
+	days.forEach(day => day.ends.reduce((start,entry) => { 
+		entry.min = minutes(entry.end)-minutes(start);
+		return entry.end
+	}, day.start)
+}
+
 Timesheet
 	= first:Day next:('\n' Day)* { return [first, ...next.map(v=>v[1]).filter(v=>v)]}
 Day
