@@ -5,7 +5,7 @@ var config = {
         index: './src/index'
     },
     output: {
-        path: '/build',
+        path: __dirname + '/build/',
         publicPath: '/build/',
         filename: '[name].js'
     },
