@@ -11,7 +11,7 @@ result = days:Timesheet {
         return obj;
     }
 	return days.filter(day=>day).map(day => {
-    	const total = day.ends.reduce((start,entry) => { 
+    	day.ends.reduce((start,entry) => { 
 			entry.min = minutes(entry.end)-minutes(start);
 			return entry.end
 		}, day.start);
@@ -20,15 +20,22 @@ result = days:Timesheet {
             breaks: entry.label.breaks || [],
             min: entry.min
         })).reduce((result,entry)=>{
-        	append(result, entry.label, entry.min);
+        	let min=entry.min;
         	entry.breaks.forEach(subentry => {
             	append(result, subentry.label, minutes(subentry.time));
+                min -= minutes(subentry.time)
             })
+        	append(result, entry.label, min);
 	        return result;
     	},{});
+        delete dayMinutes[''];
+        let total=0;
         Object.keys(dayMinutes).forEach(label => {
+            total += dayMinutes[label];
         	dayMinutes[label] = hour(dayMinutes[label]);
         })
+        dayMinutes._day = day.day;
+        dayMinutes._total = hour(total);
         return dayMinutes;
     })
 }
@@ -44,7 +51,7 @@ End
 	= "-" label:Label "-" end:Time  {return {label,end}}
 Label
     = label:[^-]+ "-" [(]breaks:SubEntries[)] {return {label:label.join(''), breaks}}
-	/ [^-(]+	{return {label:text()}}
+	/ [^-(]*	{return {label:text()}}
 	
 SubEntries 
 	= first:SubEntry next:([,;] _ SubEntry)* { return [first, ...next.map(v => v[2])] }
