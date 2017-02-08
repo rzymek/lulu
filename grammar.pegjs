@@ -1,19 +1,20 @@
 Timesheet
-	= Day ('\n' Day)* { return text()}
+	= first:Day next:('\n' Day)* { return [first, ...next.map(v=>v[1]).filter(v=>v)]}
 Day
-	= d:Num _ start:Time e:End*	{ return text()}
-    / _
+	= day:Num _ start:Time ends:End*	{ return {day,start,ends}}
+    / _									{ return undefined} 
 Time
-	= h:Num ":" m:Minutes { return `${h}:${m}`}
+	= h:Num ":" m:Minutes { return {h,m}}
 End
-	= "-" l:Label "-" end:Time  {return text()}
+	= "-" label:Label "-" end:Time  {return {label,end}}
 Label
-    = [^(]+[(]SubEntries[)] {return text()}
-	/ [^-]+	{return text()}
+    = label:[^-]+ "-" [(]breaks:SubEntries[)] {return {label:label.join(''), breaks}}
+	/ [^-(]+	{return {label:text()}}
+	
 SubEntries 
-	= SubEntry ([,;] _ SubEntry)* {return text()}
+	= first:SubEntry next:([,;] _ SubEntry)* { return [first, ...next.map(v => v[2])] }
 SubEntry
-	= start:Time _ label:[^,;)]+ {return {start,label}}
+	= start:Time _ label:[^,;)]+ {return {start,label: label.join('')}}
 String
 	= .*	{return text()}
 Num "number"
