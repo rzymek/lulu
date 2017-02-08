@@ -10,7 +10,7 @@ result = days:Timesheet {
         }
         return obj;
     }
-	return days.map(day => {
+	return days.filter(day=>day).map(day => {
     	const total = day.ends.reduce((start,entry) => { 
 			entry.min = minutes(entry.end)-minutes(start);
 			return entry.end
@@ -34,10 +34,10 @@ result = days:Timesheet {
 }
 
 Timesheet
-	= first:Day next:('\n' Day)* { return [first, ...next.map(v=>v[1]).filter(v=>v)]}
+	= first:Day next:("\n" _ Day)* { return [first, ...next.map(v=>v[2]).filter(v=>v)]}
 Day
 	= day:Num _ start:Time ends:End*	{ return {day,start,ends}}
-    / _									{ return undefined} 
+    / _									{ return undefined } 
 Time
 	= h:Num ":" m:Minutes { return {h,m}}
 End
