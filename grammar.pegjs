@@ -1,9 +1,36 @@
 result = days:Timesheet { 
+	const pad = (m) => m < 10 ? '0'+m : m;
+	const hour = (minutes) => Math.floor(minutes / 60) +':' + pad(minutes%60);
 	const minutes = (time) => time.h*60+time.m;
-	days.forEach(day => day.ends.reduce((start,entry) => { 
-		entry.min = minutes(entry.end)-minutes(start);
-		return entry.end
-	}, day.start)
+    const append = (obj, key, value) => {
+    	if(obj[key] === undefined) {
+        	obj[key] = value;
+        }else{
+        	obj[key] += value;
+        }
+        return obj;
+    }
+	return days.map(day => {
+    	const total = day.ends.reduce((start,entry) => { 
+			entry.min = minutes(entry.end)-minutes(start);
+			return entry.end
+		}, day.start);
+      	const dayMinutes= day.ends.map(entry => ({
+        	label: entry.label.label,
+            breaks: entry.label.breaks || [],
+            min: entry.min
+        })).reduce((result,entry)=>{
+        	append(result, entry.label, entry.min);
+        	entry.breaks.forEach(subentry => {
+            	append(result, subentry.label, minutes(subentry.time));
+            })
+	        return result;
+    	},{});
+        Object.keys(dayMinutes).forEach(label => {
+        	dayMinutes[label] = hour(dayMinutes[label]);
+        })
+        return dayMinutes;
+    })
 }
 
 Timesheet
@@ -22,7 +49,7 @@ Label
 SubEntries 
 	= first:SubEntry next:([,;] _ SubEntry)* { return [first, ...next.map(v => v[2])] }
 SubEntry
-	= start:Time _ label:[^,;)]+ {return {start,label: label.join('')}}
+	= time:Time _ label:[^,;)]+ {return {time,label: label.join('')}}
 String
 	= .*	{return text()}
 Num "number"
