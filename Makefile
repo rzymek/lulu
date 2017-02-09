@@ -1,8 +1,9 @@
-dev:build/index.html
-	yarn start
-build/index.html:
+.PHONY:  run build
+run:
 	rsync public/* build/
-build:build/index.html
+	yarn start
+build:
+	rsync public/* build/
 	yarn build
 	
 .ONESHELL:
