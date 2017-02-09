@@ -1,14 +1,11 @@
 import * as React from 'react';
 import './App.css';
-import { parse } from "./parser";
-import * as debounce from "lodash.debounce";
 import * as _ from "lodash";
 
-export class Results extends React.Component<{ value: string }, {}> {
+export class Results extends React.Component<{ value: any[] }, {}> {
   render() {
-    try {
       return <div>
-        {parse(this.props.value).map((day, idx) => <table key={idx}>
+        {this.props.value.map((day, idx) => <table key={idx}>
           <tbody >
             <tr>
               <th>Day: {day.day}</th>
@@ -27,8 +24,5 @@ export class Results extends React.Component<{ value: string }, {}> {
           </tbody>
         </table>)}
       </div>;
-    } catch (error) {
-      return <div>{JSON.stringify(error)}</div>
-    }
   }
 }
