@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "webpack -p",
+    "build": "webpack",
     "start": "webpack-dev-server --hot --inline"
   },
   "devDependencies": {
