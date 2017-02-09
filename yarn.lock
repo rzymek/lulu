@@ -2749,6 +2749,10 @@ svgo@^0.7.0:
     sax "~1.2.1"
     whet.extend "~0.9.9"
 
+taboverride@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/taboverride/-/taboverride-4.0.3.tgz#33924012a2f3af5ee609c5f30e1bd26a75fbe6a9"
+
 tapable@^0.2.5, tapable@~0.2.5:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-0.2.6.tgz#206be8e188860b514425375e6f1ae89bfb01fd8d"

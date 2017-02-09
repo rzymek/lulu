@@ -4,6 +4,8 @@ import * as _ from "lodash";
 import './App.css';
 import { Results } from "./Results";
 import { parse } from "./parser";
+import * as tabOverride from "taboverride";
+
 
 class App extends React.Component<{}, {
   value: any[],
@@ -43,6 +45,9 @@ class App extends React.Component<{}, {
   }
 
   componentDidMount() {
+    tabOverride.set(this.refs['textarea']);
+
+    // recalculate now()
     setInterval(this.forceUpdate.bind(this), 10 * 1000);
 
     const provider = new firebase.auth.GoogleAuthProvider();
