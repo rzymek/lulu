@@ -110,6 +110,7 @@ class App extends React.Component<{}, {
         ref="textarea"
         style={{
           width: '100%',
+          whiteSpace:'nowrap',
           backgroundColor: this.getStatusColor()
         }}
         onKeyDown={this.handleShortcuts.bind(this)}
