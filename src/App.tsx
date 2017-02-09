@@ -5,7 +5,8 @@ import './App.css';
 import { Results } from "./Results";
 import { parse } from "./parser";
 import * as tabOverride from "taboverride";
-
+import * as hotkeys from "hotkeys-js";
+import * as moment from "moment";
 
 class App extends React.Component<{}, {
   value: any[],
@@ -41,6 +42,22 @@ class App extends React.Component<{}, {
         error,
         loggedIn
       })
+    }
+  }
+
+  handleShortcuts(e: KeyboardEvent) {
+    if (e.ctrlKey) {
+      if (e.key === ',') {
+        const now = moment();
+        const textarea: any = this.refs['textarea'];
+        let text = textarea.value;
+        if (!textarea.value.endsWith('-')) {
+           text += '-';
+        }
+        text += `${now.hour()}:${roundTo5(now.minutes())}`;
+        textarea.value = text;
+        this.updateState(text);
+      }
     }
   }
 
@@ -93,6 +110,7 @@ class App extends React.Component<{}, {
           width: '100%',
           backgroundColor: this.getStatusColor()
         }}
+        onKeyDown={this.handleShortcuts.bind(this)}
         onChange={this.handleChange.bind(this)}>
       </textarea>
       <Results value={this.state.value} />
@@ -102,3 +120,7 @@ class App extends React.Component<{}, {
 }
 
 export default App;
+
+function roundTo5(v: number): number {
+  return Math.round(v / 5) * 5;
+}
