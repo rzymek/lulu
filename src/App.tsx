@@ -5,8 +5,10 @@ import './App.css';
 import { Results } from "./Results";
 import { parse } from "./parser";
 import * as tabOverride from "taboverride";
-import * as hotkeys from "hotkeys-js";
 import * as moment from "moment";
+import * as uuid from "uuid/v4";
+
+const UUID = uuid();
 
 class App extends React.Component<{}, {
   value: any[],
@@ -24,7 +26,7 @@ class App extends React.Component<{}, {
       loggedIn: false
     }
     this.persist = _.debounce(value => {
-      firebase.database().ref(`date/${this.user.uid}`).set({ value });
+      firebase.database().ref(`date/${this.user.uid}`).set({ value, UUID });
     }, 1000);
   }
 
@@ -71,9 +73,9 @@ class App extends React.Component<{}, {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.user = user;
-        firebase.database().ref(`date/${this.user.uid}`).once('value').then(snapshot => {
+        firebase.database().ref(`date/${this.user.uid}`).on('value', snapshot => {
           const entry = snapshot.val();
-          if (entry) {
+          if (entry && entry.UUID !== UUID) {
             const textarea: any = this.refs['textarea'];
             textarea.value = entry.value
             this.updateState(entry.value);
