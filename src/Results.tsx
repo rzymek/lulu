@@ -14,6 +14,7 @@ export class Results extends React.Component<{ value: any[] }, {}> {
             {_(day.entries)
               .toPairs()
               .map(pair => ({ label: pair[0], time: pair[1] }))
+              .sortBy('label')
               .map((e, idx) =>
                 <tr key={idx}>
                   <th>{e.label}</th>
