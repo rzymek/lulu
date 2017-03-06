@@ -13,9 +13,10 @@ const UUID = uuid();
 class App extends React.Component<{}, {
   value: any[],
   error: any,
-  loggedIn?: boolean
+  loggedIn: boolean,
+  dirty: boolean
 }> {
-  persist: (value: string) => void;
+  persist: (value: string) => Promise<any>;
   user: firebase.UserInfo = undefined;
 
   constructor() {
@@ -23,11 +24,16 @@ class App extends React.Component<{}, {
     this.state = {
       value: [],
       error: undefined,
-      loggedIn: false
+      loggedIn: false,
+      dirty: false
     }
-    this.persist = _.debounce(value => {
-      firebase.database().ref(`date/${this.user.uid}`).set({ value, UUID });
-    }, 1000);
+    this.persist = _.debounce(value => 
+      firebase.database()
+        .ref(`timesheets/${this.user.uid}`)
+        .set({ value, UUID })
+    , 1000, {
+      leading: true
+    });
   }
 
   updateState(value) {
@@ -42,7 +48,7 @@ class App extends React.Component<{}, {
       this.setState({
         value: [],
         error,
-        loggedIn
+        loggedIn,
       })
     }
   }
@@ -54,7 +60,7 @@ class App extends React.Component<{}, {
         const textarea: any = this.refs['textarea'];
         let text = textarea.value;
         if (!textarea.value.endsWith('-')) {
-           text += '-';
+          text += '-';
         }
         text += `${now.hour()}:${roundTo5(now.minutes())}`;
         textarea.value = text;
@@ -73,7 +79,7 @@ class App extends React.Component<{}, {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.user = user;
-        firebase.database().ref(`date/${this.user.uid}`).on('value', snapshot => {
+        firebase.database().ref(`timesheets/${this.user.uid}`).on('value', snapshot => {
           const entry = snapshot.val();
           if (entry && entry.UUID !== UUID) {
             const textarea: any = this.refs['textarea'];
@@ -89,18 +95,21 @@ class App extends React.Component<{}, {
 
   handleChange(e) {
     const {value} = e.target;
+    this.setState({dirty:true});
     this.updateState(value);
-    this.persist(value);
+    this.persist(value).then(()=>this.setState({dirty:false}))
   }
 
   getStatusColor() {
     console.log(this.state.error)
     if (this.state.error !== undefined) {
       return '#ffdddd';
-    } else if (this.state.loggedIn) {
-      return '#ddffdd';
-    } else {
+    } else if (!this.state.loggedIn) {
       return '#dddddd';
+    } else if(this.state.dirty){      
+      return '#f1f442';
+    }else{
+      return '#ddffdd';
     }
   }
 
