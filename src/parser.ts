@@ -2,6 +2,15 @@ import * as moment from "moment";
 declare function require(path: string): any;
 const grammar = require('./grammar.pegjs');
 
+
+export interface TimeSheet {
+    day:any,
+    total: string,
+    entries:any
+}
+export interface TSError{
+}
+
 function now() {
     var now = moment();
     return {
@@ -10,8 +19,7 @@ function now() {
     }
 }
 
-
-function processTimesheets(days) {
+function processTimesheets(days: any[]): TimeSheet[] {
     const pad = (m) => m < 10 ? '0' + m : m;
     const hour = (minutes) => Math.floor(minutes / 60) + ':' + pad(minutes % 60);
     const minutes = (time) => time.h * 60 + time.m;
@@ -56,9 +64,10 @@ function processTimesheets(days) {
     })
 }
 
-
-export function parse(text) {
+export function parse(text):TimeSheet[] /* throws TSError */ {
     const days = grammar.parse(text);
-    console.log(days);
-    return processTimesheets(days);
+    console.log('days',days);
+    const result = processTimesheets(days);
+    console.log('res',result);
+    return result;
 }
