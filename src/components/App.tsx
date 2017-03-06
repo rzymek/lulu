@@ -1,10 +1,8 @@
-import * as firebase from 'firebase';
 import * as _ from 'lodash';
-import * as moment from 'moment';
 import * as React from 'react';
 import * as tabOverride from 'taboverride';
 import { DB } from '../DB';
-import { parse, TimeSheet, TSError } from '../parser';
+import { TimeSheet, TSError } from '../parser';
 import './App.css';
 import { Results } from './Results';
 import { TSInput } from './TSInput';
@@ -49,7 +47,7 @@ export class App extends React.Component<{}, {
     </div>;
   }
 
-  private componentDidMount() {
+  public componentDidMount() {
     tabOverride.set(this.input);
 
     // recalculate now()

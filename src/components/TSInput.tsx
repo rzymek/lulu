@@ -1,11 +1,8 @@
-import * as firebase from 'firebase';
-import * as _ from 'lodash';
+
 import * as React from 'react';
 import * as tabOverride from 'taboverride';
 import { parse, TimeSheet, TSError } from '../parser';
-import { roundTo5 } from '../utils/utils';
 import './App.css';
-import { Results } from './Results';
 
 export class TSInput extends React.Component<{
     style?: React.CSSProperties,
@@ -27,7 +24,7 @@ export class TSInput extends React.Component<{
         </textarea>;
     }
 
-    private componentDidMount() {
+    public componentDidMount() {
         tabOverride.set(this.textarea);
         // recalculate now()
         setInterval(this.forceUpdate.bind(this), 10 /*sec*/ * 1000);

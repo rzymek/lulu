@@ -1,6 +1,4 @@
 import * as firebase from 'firebase';
-import * as _ from 'lodash';
-import * as React from 'react';
 import * as uuid from 'uuid/v4';
 
 const UUID = uuid();
