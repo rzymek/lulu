@@ -4,7 +4,7 @@ run:
 	yarn start
 build:
 	rsync public/* build/
-	yarn build
+	yarn lint && yarn build
 	
 .ONESHELL:
 deploy: clean build

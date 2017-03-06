@@ -1,21 +1,34 @@
+import * as firebase from 'firebase';
+import * as _ from 'lodash';
 import * as React from 'react';
-import * as firebase from "firebase";
-import * as _ from "lodash";
+import * as tabOverride from 'taboverride';
+import { parse, TimeSheet, TSError } from '../parser';
+import { roundTo5 } from '../utils/utils';
 import './App.css';
-import { Results } from "./Results";
-import { parse, TimeSheet, TSError } from "../parser";
-import * as tabOverride from "taboverride";
-import { roundTo5 } from "../utils/utils";
-
+import { Results } from './Results';
 
 export class TSInput extends React.Component<{
-    onChange(text:string, result: TimeSheet[]): void,
+    style?: React.CSSProperties,
+    onChange(text: string, result: TimeSheet[]): void,
     onError(error: TSError): void,
-    style?: React.CSSProperties
 }, {}> {
+    private textarea: HTMLTextAreaElement;
 
-    componentDidMount() {
-        tabOverride.set(this.refs['textarea']);
+    public setText(text: string): void {
+        this.textarea.value = text;
+        this.processText(text); // TODO: maybe unnessesary
+    }
+
+    public render() {
+        return <textarea rows={20}
+            ref={textarea => this.textarea = textarea}
+            style={this.props.style}
+            onChange={this.handleChange.bind(this)}>
+        </textarea>;
+    }
+
+    private componentDidMount() {
+        tabOverride.set(this.textarea);
         // recalculate now()
         setInterval(this.forceUpdate.bind(this), 10 /*sec*/ * 1000);
     }
@@ -33,18 +46,5 @@ export class TSInput extends React.Component<{
             this.props.onError(error);
         }
 
-    }
-    setText(text: string): void {
-        const textarea = this.refs['textarea'] as HTMLTextAreaElement;
-        textarea.value = text;
-        this.processText(text);//TODO: maybe unnessesary
-    }
-
-    render() {
-        return <textarea rows={20}
-            ref="textarea"
-            style={this.props.style}
-            onChange={this.handleChange.bind(this)}>
-        </textarea>
     }
 }

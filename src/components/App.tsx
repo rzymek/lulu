@@ -1,72 +1,88 @@
+import * as firebase from 'firebase';
+import * as _ from 'lodash';
+import * as moment from 'moment';
 import * as React from 'react';
-import * as firebase from "firebase";
-import * as _ from "lodash";
-import * as tabOverride from "taboverride";
-import * as moment from "moment";
+import * as tabOverride from 'taboverride';
+import { DB } from '../DB';
+import { parse, TimeSheet, TSError } from '../parser';
 import './App.css';
-import { Results } from "./Results";
-import { parse, TimeSheet, TSError } from "../parser";
-import { TSInput } from "./TSInput"
-import { DB } from "../DB";
+import { Results } from './Results';
+import { TSInput } from './TSInput';
 
 export class App extends React.Component<{}, {
   value: any[],
   error: any,
   loggedIn: boolean,
-  dirty: boolean
+  dirty: boolean,
 }> {
   private db = new DB<any>();
-
-  constructor() {
-    super();
-    this.state = {
-      value: [],
-      error: undefined,
-      loggedIn: false,
-      dirty: false
-    }
-  }
+  private input: TSInput;
 
   private persist = _.debounce(
     value => this.db.write(value),
     1000,
-    { leading: true }
+    { leading: true },
   );
 
-  componentDidMount() {
-    tabOverride.set(this.refs['textarea']);
+  constructor() {
+    super();
+    this.state = {
+      dirty: false,
+      error: undefined,
+      loggedIn: false,
+      value: [],
+    };
+  }
+
+  public render() {
+    return <div>
+      <TSInput
+        ref={input => this.input = input}
+        style={{
+          backgroundColor: this.getStatusColor(),
+          width: '100%',
+        }}
+        onChange={this.handleChange.bind(this)}
+        onError={this.handleError.bind(this)} />
+      <Results value={this.state.value} />
+      <pre>{JSON.stringify(this.state.error, null, 2)}</pre>
+    </div>;
+  }
+
+  private componentDidMount() {
+    tabOverride.set(this.input);
 
     // recalculate now()
     setInterval(this.forceUpdate.bind(this), 10 * 1000);
 
     this.db.login()
       .then(() => {
-        this.setState({ loggedIn: true })
+        this.setState({ loggedIn: true });
         this.db.subscribe((value: any) => {
-          const input = this.refs['input'] as TSInput;
+          const input = this.input;
           input.setText(value);
-        })
+        });
       });
   }
 
-  handleChange(text: string, value: TimeSheet[]) {
+  private handleChange(text: string, value: TimeSheet[]) {
     this.setState({
       dirty: true,
       value,
-      error: undefined
+      error: undefined,
     });
     this.persist(text)
-      .then(() => this.setState({ dirty: false }))
+      .then(() => this.setState({ dirty: false }));
   }
 
-  handleError(error: TSError) {
+  private handleError(error: TSError) {
     this.setState({
       value: [],
-      error
-    })
+      error,
+    });
   }
 
-  getStatusColor() {
+  private getStatusColor() {
     if (this.state.error !== undefined) {
       return '#ffdddd';
     } else if (!this.state.loggedIn) {
@@ -76,20 +92,5 @@ export class App extends React.Component<{}, {
     } else {
       return '#ddffdd';
     }
-  }
-
-  render() {
-    return <div>
-      <TSInput
-        ref="input"
-        style={{
-          width: '100%',
-          backgroundColor: this.getStatusColor()
-        }}
-        onChange={this.handleChange.bind(this)}
-        onError={this.handleError.bind(this)} />
-      <Results value={this.state.value} />
-      <pre>{JSON.stringify(this.state.error, null, 2)}</pre>
-    </div>;
   }
 }

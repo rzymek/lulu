@@ -1,7 +1,7 @@
+import * as firebase from 'firebase';
+import * as _ from 'lodash';
 import * as React from 'react';
-import * as firebase from "firebase";
-import * as _ from "lodash";
-import * as uuid from "uuid/v4";
+import * as uuid from 'uuid/v4';
 
 const UUID = uuid();
 
@@ -18,7 +18,7 @@ export class DB<V> {
         } else {
           firebase.auth().signInWithRedirect(provider);
         }
-      })
+      }),
     );
   }
 
@@ -28,7 +28,7 @@ export class DB<V> {
       if (entry && entry.UUID !== UUID) {
         callback(entry.value);
       }
-    })
+    });
   }
 
   public write(value: V): firebase.Promise<any> {

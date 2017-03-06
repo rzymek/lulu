@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server --hot --inline"
+    "start": "webpack-dev-server --hot --inline",
+    "lint": "tslint 'src/**/*.ts*'"
   },
   "devDependencies": {
     "@types/pegjs": "^0.10.0",
@@ -12,6 +13,7 @@
     "pegjs-loader": "^0.5.0",
     "style-loader": "^0.13.1",
     "ts-loader": "^2.0.0",
+    "tslint": "^4.5.1",
     "typescript": "^2.1.5",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.3.0"

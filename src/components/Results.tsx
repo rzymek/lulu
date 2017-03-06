@@ -1,10 +1,10 @@
+import * as _ from 'lodash';
 import * as React from 'react';
+import { TimeSheet } from '../parser';
 import './App.css';
-import { TimeSheet } from "../parser";
-import * as _ from "lodash";
 
 export class Results extends React.Component<{ value: TimeSheet[] }, {}> {
-  render() {
+  public render() {
     return <div>
       {this.props.value.map((day, idx) => <table key={idx}>
         <tbody >
@@ -16,8 +16,8 @@ export class Results extends React.Component<{ value: TimeSheet[] }, {}> {
             .toPairs()
             .map(pair => ({ label: pair[0], time: pair[1] }))
             .sortBy('label')
-            .map((e, idx) =>
-              <tr key={idx}>
+            .map(e =>
+              <tr key={e.label}>
                 <th>{e.label}</th>
                 <td>{e.time}</td>
               </tr>)
