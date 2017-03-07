@@ -11,9 +11,15 @@ interface FileList {
 export class DB {
   private user: firebase.UserInfo = undefined;
   private currentRef: firebase.database.Reference = {
-    off() { }
+    off: _.noop,
   } as firebase.database.Reference;
   private filename: string;
+
+  private backup = _.debounce((value:string, filename:string) => {
+    firebase.database()
+      .ref(`backups/${this.user.uid}/${filename}`)
+      .push({ value, timestamp: new Date().toISOString() })
+  }, 10*1000);
 
   public login(): Promise<any> {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -32,8 +38,7 @@ export class DB {
   public subscribeToFiles(callback: (files: string[]) => void) {
     firebase.database().ref(`files/${this.user.uid}`).on('value', snapshot => {
       const entry = snapshot.val();
-      console.log(entry);
-      callback(_.values(entry) as string[]);
+      callback(_.values(entry));
     });
   }
 
@@ -71,10 +76,4 @@ export class DB {
       .set({ value, UUID })
       .then(() => this.backup(value, this.filename));
   }
-
-  private backup = _.debounce((value:string, filename:string) => {
-    firebase.database()
-      .ref(`backups/${this.user.uid}/${filename}`)
-      .push({ value, timestamp: new Date().toISOString() }) 
-  }, 10*1000)
 }

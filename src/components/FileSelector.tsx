@@ -3,7 +3,7 @@ import * as React from 'react';
 export class FileSelector extends React.Component<{
     values: string[],
     value: string,
-    onChange(value: string): void
+    onChange(value: string): void,
 }, {}> {
 
     private handleChange(e: Event) {

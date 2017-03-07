@@ -5,7 +5,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack-dev-server --hot --inline",
-    "lint": "tslint 'src/**/*.ts*'"
+    "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'"
   },
   "devDependencies": {
     "@types/pegjs": "^0.10.0",

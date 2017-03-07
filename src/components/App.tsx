@@ -30,10 +30,10 @@ export class App extends React.Component<{}, {
     this.state = {
       dirty: false,
       error: undefined,
+      filename: 'default',
+      files: [],
       loggedIn: false,
       value: [],
-      files: [],
-      filename: 'default'
     };
   }
 
