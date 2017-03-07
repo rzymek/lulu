@@ -33,7 +33,7 @@ export class DB {
     firebase.database().ref(`files/${this.user.uid}`).on('value', snapshot => {
       const entry = snapshot.val();
       console.log(entry);
-      callback(_.values(entry));
+      callback(_.values(entry) as string[]);
     });
   }
 
@@ -68,6 +68,13 @@ export class DB {
     }
     return firebase.database()
       .ref(`timesheets/${this.user.uid}/${this.filename}`)
-      .set({ value, UUID });
+      .set({ value, UUID })
+      .then(() => this.backup(value, this.filename));
   }
+
+  private backup = _.debounce((value:string, filename:string) => {
+    firebase.database()
+      .ref(`backups/${this.user.uid}/${filename}`)
+      .push({ value, timestamp: new Date().toISOString() }) 
+  }, 10*1000)
 }

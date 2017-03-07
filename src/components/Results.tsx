@@ -17,7 +17,7 @@ export class Results extends React.Component<{ value: TimeSheet[] }, {}> {
             .map(pair => ({ label: pair[0], time: pair[1] }))
             .sortBy('label')
             .map(e =>
-              <tr key={e.label}>
+              <tr key={`${e.label}`}>
                 <th>{e.label}</th>
                 <td>{e.time}</td>
               </tr>)
