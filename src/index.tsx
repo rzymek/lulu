@@ -16,3 +16,5 @@ ReactDOM.render(
   <App />,
   document.getElementById('root'),
 );
+
+window['firebase'] = firebase;

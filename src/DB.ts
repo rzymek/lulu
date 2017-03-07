@@ -1,10 +1,19 @@
 import * as firebase from 'firebase';
 import * as uuid from 'uuid/v4';
+import * as _ from "lodash";
 
 const UUID = uuid();
 
-export class DB<V> {
+interface FileList {
+  [key: string]: string
+}
+
+export class DB {
   private user: firebase.UserInfo = undefined;
+  private currentRef: firebase.database.Reference = {
+    off() { }
+  } as firebase.database.Reference;
+  private filename: string;
 
   public login(): Promise<any> {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -20,18 +29,45 @@ export class DB<V> {
     );
   }
 
-  public subscribe(callback: (value: V) => void) {
-    firebase.database().ref(`timesheets/${this.user.uid}`).on('value', snapshot => {
+  public subscribeToFiles(callback: (files: string[]) => void) {
+    firebase.database().ref(`files/${this.user.uid}`).on('value', snapshot => {
       const entry = snapshot.val();
-      if (entry && entry.UUID !== UUID) {
+      console.log(entry);
+      callback(_.values(entry));
+    });
+  }
+
+  public subscribe(filename: string, callback: (value: string) => void) {
+    this.currentRef.off();
+
+    firebase.database().ref(`files/${this.user.uid}`).once('value', snapshot => {
+      const files = snapshot.val() as FileList;
+      const {ref} = snapshot;
+      if (!_(files).values().includes(filename)) {
+        ref.push(filename);
+      }
+    });
+
+    this.currentRef = firebase.database().ref(`timesheets/${this.user.uid}/${filename}`);
+    this.currentRef.on('value', snapshot => {
+      const entry = snapshot.val();
+      const filenameSwitch = this.filename !== filename;
+      this.filename = filename;
+      if (entry == null) {
+        callback('');
+      }
+      if (entry && (entry.UUID !== UUID || filenameSwitch)) {
         callback(entry.value);
       }
     });
   }
 
-  public write(value: V): firebase.Promise<any> {
+  public write(value: string): firebase.Promise<any> {
+    if (_.isNil(this.filename)) {
+      return;
+    }
     return firebase.database()
-      .ref(`timesheets/${this.user.uid}`)
+      .ref(`timesheets/${this.user.uid}/${this.filename}`)
       .set({ value, UUID });
   }
 }

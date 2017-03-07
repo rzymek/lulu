@@ -6,14 +6,17 @@ import { TimeSheet, TSError } from '../parser';
 import './App.css';
 import { Results } from './Results';
 import { TSInput } from './TSInput';
+import { FileSelector } from './FileSelector';
 
 export class App extends React.Component<{}, {
   value: any[],
   error: any,
   loggedIn: boolean,
   dirty: boolean,
+  files: string[],
+  filename: string
 }> {
-  private db = new DB<any>();
+  private db = new DB();
   private input: TSInput;
 
   private persist = _.debounce(
@@ -29,11 +32,17 @@ export class App extends React.Component<{}, {
       error: undefined,
       loggedIn: false,
       value: [],
+      files: [],
+      filename: 'default'
     };
   }
 
   public render() {
     return <div>
+      <FileSelector values={this.state.files}
+        value={this.state.filename}
+        onChange={this.openFile.bind(this)} />
+      <button onClick={this.newFile.bind(this)}>+</button>
       <TSInput
         ref={input => this.input = input}
         style={{
@@ -56,11 +65,27 @@ export class App extends React.Component<{}, {
     this.db.login()
       .then(() => {
         this.setState({ loggedIn: true });
-        this.db.subscribe((value: any) => {
-          const input = this.input;
-          input.setText(value);
-        });
+        this.db.subscribeToFiles(files => this.setState({files}))
+        this.openFile(this.state.filename);
       });
+  }
+
+  private newFile() {
+    const filename = prompt('Enter filename');
+    if (_.isEmpty(filename)) {
+      return;
+    }
+    this.openFile(filename)
+  }
+
+  private openFile(filename: string) {
+    this.setState({
+      filename
+    });
+    this.db.subscribe(filename, (value: any) => {
+      const input = this.input;
+      input.setText(value);
+    });
   }
 
   private handleChange(text: string, value: TimeSheet[]) {

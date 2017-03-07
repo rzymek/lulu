@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 
 var config = {
+    devtool: "cheap-eval-source-map",
     entry: {
         index: './src/index'
     },
