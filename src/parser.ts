@@ -1,10 +1,12 @@
 import * as moment from 'moment';
+import {hour} from './utils/utils';
 declare function require(path: string): any;
 const grammar = require('./grammar.pegjs');
 
 export interface TimeSheet {
     day: any;
     total: string;
+    totalMinutes: number;
     entries: any;
 }
 export interface TSError {
@@ -19,8 +21,6 @@ function now() {
 }
 
 function processTimesheets(days: any[]): TimeSheet[] {
-    const pad = (m) => m < 10 ? '0' + m : m;
-    const hour = (minutes) => Math.floor(minutes / 60) + ':' + pad(minutes % 60);
     const minutes = (time) => time.h * 60 + time.m;
     const append = (obj, key, value) => {
         if (obj[key] === undefined) {
@@ -59,6 +59,7 @@ function processTimesheets(days: any[]): TimeSheet[] {
             day: day.day,
             entries: dayMinutes,
             total: hour(total),
+            totalMinutes: total
         };
     });
 }
