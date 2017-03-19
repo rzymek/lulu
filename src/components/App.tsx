@@ -9,15 +9,16 @@ import { TSInput } from './TSInput';
 import { FileSelector } from './FileSelector';
 
 export class App extends React.Component<{}, {
-  value: any[],
+  publishing: boolean,
   error: any,
-  loggedIn: boolean,
-  dirty: boolean,
-  files: string[],
   filename: string
+  files: string[],
+  loggedIn: boolean,
+  value: any[],
 }> {
   private db = new DB();
   private input: TSInput;
+  private publishedText = '';
 
   private persist = _.debounce(
     value => this.db.write(value),
@@ -28,7 +29,7 @@ export class App extends React.Component<{}, {
   constructor() {
     super();
     this.state = {
-      dirty: false,
+      publishing: false,
       error: undefined,
       filename: 'default',
       files: [],
@@ -59,9 +60,6 @@ export class App extends React.Component<{}, {
   public componentDidMount() {
     tabOverride.set(this.input);
 
-    // recalculate now()
-    setInterval(this.forceUpdate.bind(this), 10 * 1000);
-
     this.db.login()
       .then(() => {
         this.setState({ loggedIn: true });
@@ -82,20 +80,28 @@ export class App extends React.Component<{}, {
     this.setState({
       filename
     });
-    this.db.subscribe(filename, (value: any) => {
-      const input = this.input;
-      input.setText(value);
+    this.db.subscribe(filename, (value: string) => {
+      this.publishedText = value;
+      this.input.setText(value);
     });
   }
 
   private handleChange(text: string, value: TimeSheet[]) {
+    const publish = text !== this.publishedText;
+    console.log(publish, text,value);
     this.setState({
-      dirty: true,
+      publishing: publish,
       value,
       error: undefined,
     });
+    if(!publish){
+      return;
+    }
     this.persist(text)
-      .then(() => this.setState({ dirty: false }));
+      .then(() => {
+        this.setState({ publishing: false });
+        this.publishedText = text;
+      });
   }
 
   private handleError(error: TSError) {
@@ -110,7 +116,7 @@ export class App extends React.Component<{}, {
       return '#ffdddd';
     } else if (!this.state.loggedIn) {
       return '#dddddd';
-    } else if (this.state.dirty) {
+    } else if (this.state.publishing) {
       return '#f1f442';
     } else {
       return '#ddffdd';
