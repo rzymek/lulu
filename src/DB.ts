@@ -15,11 +15,11 @@ export class DB {
   } as firebase.database.Reference;
   private filename: string;
 
-  private backup = _.debounce((value:string, filename:string) => {
+  private backup = _.debounce((value: string, filename: string) => {
     firebase.database()
       .ref(`${this.user.uid}/backups/${filename}`)
       .push({ value, timestamp: new Date().toISOString() })
-  }, 10*1000);
+  }, 10 * 1000);
 
   public login(): Promise<any> {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -33,6 +33,15 @@ export class DB {
         }
       }),
     );
+  }
+
+  public getLastOpenedFile(): Promise<string> {
+    return new Promise(resolve => {
+      firebase.database().ref(`${this.user.uid}/openFile`).once('value', snapshot => {
+        const filename = snapshot.val();
+        resolve(filename);
+      })
+    });
   }
 
   public subscribeToFiles(callback: (files: string[]) => void) {
@@ -52,6 +61,8 @@ export class DB {
         ref.push(filename);
       }
     });
+
+    firebase.database().ref(`${this.user.uid}/openFile`).set(filename);
 
     this.currentRef = firebase.database().ref(`${this.user.uid}/timesheets/${filename}`);
     this.currentRef.on('value', snapshot => {

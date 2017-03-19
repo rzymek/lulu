@@ -64,7 +64,9 @@ export class App extends React.Component<{}, {
       .then(() => {
         this.setState({ loggedIn: true });
         this.db.subscribeToFiles(files => this.setState({files}))
-        this.openFile(this.state.filename);
+        this.db.getLastOpenedFile().then(filename => 
+          this.openFile(filename || 'default')
+        );
       });
   }
 
@@ -88,7 +90,6 @@ export class App extends React.Component<{}, {
 
   private handleChange(text: string, value: TimeSheet[]) {
     const publish = text !== this.publishedText;
-    console.log(publish, text,value);
     this.setState({
       publishing: publish,
       value,
