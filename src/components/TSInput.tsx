@@ -27,11 +27,11 @@ export class TSInput extends React.Component<{
     public componentDidMount() {
         tabOverride.set(this.textarea);
         // recalculate now()
-        setInterval(this.forceUpdate.bind(this), 10 /*sec*/ * 1000);
+        setInterval(this.handleChange.bind(this), 10 /*sec*/ * 1000);
     }
 
-    private handleChange(e) {
-        const {value} = e.target;
+    private handleChange() {
+        const {value} = this.textarea;
         this.processText(value);
     }
 
