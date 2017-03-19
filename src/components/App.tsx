@@ -4,16 +4,16 @@ import * as tabOverride from 'taboverride';
 import { DB } from '../DB';
 import { TimeSheet, TSError } from '../parser';
 import './App.css';
+import { FileSelector } from './FileSelector';
 import { Results } from './Results';
 import { TSInput } from './TSInput';
-import { FileSelector } from './FileSelector';
 
 export class App extends React.Component<{}, {
-  publishing: boolean,
   error: any,
   filename: string
   files: string[],
   loggedIn: boolean,
+  publishing: boolean,
   value: any[],
 }> {
   private db = new DB();
@@ -29,11 +29,11 @@ export class App extends React.Component<{}, {
   constructor() {
     super();
     this.state = {
-      publishing: false,
       error: undefined,
       filename: 'default',
       files: [],
       loggedIn: false,
+      publishing: false,
       value: [],
     };
   }
@@ -63,9 +63,9 @@ export class App extends React.Component<{}, {
     this.db.login()
       .then(() => {
         this.setState({ loggedIn: true });
-        this.db.subscribeToFiles(files => this.setState({files}))
-        this.db.getLastOpenedFile().then(filename => 
-          this.openFile(filename || 'default')
+        this.db.subscribeToFiles(files => this.setState({ files }));
+        this.db.getLastOpenedFile().then(filename =>
+          this.openFile(filename || 'default'),
         );
       });
   }
@@ -75,12 +75,12 @@ export class App extends React.Component<{}, {
     if (_.isEmpty(filename)) {
       return;
     }
-    this.openFile(filename)
+    this.openFile(filename);
   }
 
   private openFile(filename: string) {
     this.setState({
-      filename
+      filename,
     });
     this.db.subscribe(filename, (value: string) => {
       this.publishedText = value;
@@ -91,11 +91,11 @@ export class App extends React.Component<{}, {
   private handleChange(text: string, value: TimeSheet[]) {
     const publish = text !== this.publishedText;
     this.setState({
-      publishing: publish,
       value,
       error: undefined,
+      publishing: publish,
     });
-    if(!publish){
+    if (!publish) {
       return;
     }
     this.persist(text)

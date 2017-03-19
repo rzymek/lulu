@@ -1,11 +1,11 @@
 import * as firebase from 'firebase';
+import * as _ from 'lodash';
 import * as uuid from 'uuid/v4';
-import * as _ from "lodash";
 
 const UUID = uuid();
 
 interface FileList {
-  [key: string]: string
+  [key: string]: string;
 }
 
 export class DB {
@@ -18,7 +18,7 @@ export class DB {
   private backup = _.debounce((value: string, filename: string) => {
     firebase.database()
       .ref(`${this.user.uid}/backups/${filename}`)
-      .push({ value, timestamp: new Date().toISOString() })
+      .push({ value, timestamp: new Date().toISOString() });
   }, 10 * 1000);
 
   public login(): Promise<any> {
@@ -40,7 +40,7 @@ export class DB {
       firebase.database().ref(`${this.user.uid}/openFile`).once('value', snapshot => {
         const filename = snapshot.val();
         resolve(filename);
-      })
+      });
     });
   }
 

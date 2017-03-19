@@ -59,7 +59,7 @@ function processTimesheets(days: any[]): TimeSheet[] {
             day: day.day,
             entries: dayMinutes,
             total: hour(total),
-            totalMinutes: total
+            totalMinutes: total,
         };
     });
 }
