@@ -17,7 +17,7 @@ export class DB {
 
   private backup = _.debounce((value:string, filename:string) => {
     firebase.database()
-      .ref(`backups/${this.user.uid}/${filename}`)
+      .ref(`${this.user.uid}/backups/${filename}`)
       .push({ value, timestamp: new Date().toISOString() })
   }, 10*1000);
 
@@ -36,7 +36,7 @@ export class DB {
   }
 
   public subscribeToFiles(callback: (files: string[]) => void) {
-    firebase.database().ref(`files/${this.user.uid}`).on('value', snapshot => {
+    firebase.database().ref(`${this.user.uid}/files`).on('value', snapshot => {
       const entry = snapshot.val();
       callback(_.values(entry));
     });
@@ -45,7 +45,7 @@ export class DB {
   public subscribe(filename: string, callback: (value: string) => void) {
     this.currentRef.off();
 
-    firebase.database().ref(`files/${this.user.uid}`).once('value', snapshot => {
+    firebase.database().ref(`${this.user.uid}/files`).once('value', snapshot => {
       const files = snapshot.val() as FileList;
       const {ref} = snapshot;
       if (!_(files).values().includes(filename)) {
@@ -53,7 +53,7 @@ export class DB {
       }
     });
 
-    this.currentRef = firebase.database().ref(`timesheets/${this.user.uid}/${filename}`);
+    this.currentRef = firebase.database().ref(`${this.user.uid}/timesheets/${filename}`);
     this.currentRef.on('value', snapshot => {
       const entry = snapshot.val();
       const filenameSwitch = this.filename !== filename;
@@ -72,7 +72,7 @@ export class DB {
       return;
     }
     return firebase.database()
-      .ref(`timesheets/${this.user.uid}/${this.filename}`)
+      .ref(`${this.user.uid}/timesheets/${this.filename}`)
       .set({ value, UUID })
       .then(() => this.backup(value, this.filename));
   }
