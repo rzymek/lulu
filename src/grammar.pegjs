@@ -2,7 +2,8 @@
 Timesheet
 	= first:Day next:("\n" _ Day)* { return [first, ...next.map(v=>v[2]).filter(v=>v)]}
 Day
-	= day:[^ \t]+ _ start:Time ends:End*	{ return {day,start,ends}}
+	= "#" [^\n]*                            { return undefined }
+	/ day:[^ \t]+ _ start:Time ends:End*	{ return {day,start,ends}}
     / _									    { return undefined } 
 Time
 	= h:Num ":" m:Minutes { return {h,m}}
