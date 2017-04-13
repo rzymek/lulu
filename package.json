@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "webpack -p",
+    "build": "NODE_ENV=production webpack",
     "start": "webpack-dev-server --hot --inline",
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
     "lint:fix": "npm run lint -- --fix"

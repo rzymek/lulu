@@ -1,7 +1,8 @@
-var webpack = require('webpack');
+const webpack = require('webpack');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
-var config = {
-    devtool: "cheap-source-map",
+const config = {
+    devtool: "source-map",
     entry: {
         index: './src/index'
     },
@@ -13,6 +14,11 @@ var config = {
     resolve: {
         extensions: ['.js', '.ts', '.tsx']
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('production')
+        })
+    ],
     module: {
         loaders: [
             { test: /\.pegjs$/, loader: 'pegjs-loader' },
