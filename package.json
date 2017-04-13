@@ -23,7 +23,7 @@
   "dependencies": {
     "@types/react": "^15.0.7",
     "@types/react-dom": "^0.14.23",
-    "firebase": "^3.7.6",
+    "firebase": "3.6.9",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "pegjs": "^0.10.0",
