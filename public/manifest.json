@@ -1,5 +1,6 @@
 {
- "name": "App",
+ "name": "lulu timesheets",
+ "short_name": "lulu",
  "icons": [
   {
    "src": "\/android-icon-36x36.png",
