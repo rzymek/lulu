@@ -9,7 +9,7 @@ export class Results extends React.Component<{ value: TimeSheet[] }, {}> {
     const total = _(this.props.value).map(day => day.totalMinutes).sum();
     return <div>
       <h1 style={{ fontSize: 16 }}>
-        Total: {hour(total)}({(total / 60).toFixed(2)}min)
+        Total: {hour(total)}({(total / 60).toFixed(2)}h)
       </h1>
       {this.props.value.map((day, idx) => <table key={idx}>
         <tbody >
