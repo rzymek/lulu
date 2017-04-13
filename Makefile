@@ -1,10 +1,10 @@
-.PHONY:  run build
-run:
-	rsync public/* build/
+.PHONY:  run build sync
+run: sync
 	yarn start
-build:
-	rsync public/* build/
+build: sync
 	yarn lint && yarn build
+sync:
+	rsync -r public/* build/
 	
 .ONESHELL:
 deploy: clean build
