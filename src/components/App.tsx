@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import * as tabOverride from 'taboverride';
 import { DB } from '../DB';
-import { TimeSheet, PegjsError } from '../parser';
+import { PegjsError, TimeSheet } from '../parser';
 import './App.css';
 import { FileSelector } from './FileSelector';
 import { Results } from './Results';

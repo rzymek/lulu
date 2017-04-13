@@ -61,7 +61,6 @@ export function parse(text): TimeSheet[] /* throws TSError */ {
     return result;
 }
 
-
 export interface TimeSheet {
     day: string;
     total: string;
@@ -69,39 +68,39 @@ export interface TimeSheet {
     entries: { [label: string]: string /*h:m*/ };
 }
 interface PegjsErrorLocation {
-    start: number,
-    line: number,
-    column: number
-};
+    start: number;
+    line: number;
+    column: number;
+}
 export interface PegjsError {
-    message: string,
-    expected: {
+    message: string;
+    expected: Array<{
         type: string,
-        description: string
-    }[],
-    found: string,
+        description: string,
+    }>;
+    found: string;
     location: {
         start: PegjsErrorLocation,
-        end: PegjsErrorLocation
-    },
-    name: string
+        end: PegjsErrorLocation,
+    };
+    name: string;
 }
 interface Time {
-    h: number,
-    m: number
+    h: number;
+    m: number;
 }
 interface ParserOutput {
-    day: string,
-    start: Time,
-    ends: {
+    day: string;
+    start: Time;
+    ends: Array<{
         end: Time,
         label: {
-            breaks: {
+            breaks: Array<{
                 label: string,
-                time: Time
-            }[],
-            label: string
+                time: Time,
+            }>,
+            label: string,
         },
-        min: number
-    }[]
+        min: number,
+    }>;
 }

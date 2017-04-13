@@ -1,7 +1,7 @@
 
 import * as React from 'react';
 import * as tabOverride from 'taboverride';
-import { parse, TimeSheet, PegjsError } from '../parser';
+import { parse, PegjsError, TimeSheet } from '../parser';
 import './App.css';
 
 export class TSInput extends React.Component<{
