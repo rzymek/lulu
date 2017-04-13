@@ -13,7 +13,7 @@ export interface TSError {
 }
 
 function now() {
-    let now = moment();
+    const now = moment();
     return {
         h: now.hour(),
         m: now.minutes(),

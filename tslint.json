@@ -4,7 +4,7 @@
         "arrow-parens": false,
         "quotemark": [true, "single", "jsx-double"],
         "interface-name": [true, "never-prefix"],
-        "no-unused-variable": [true, "react"],
+        "no-empty-interface": false,
         "no-var-requires": false /* workaround for require'ing pegjs parser */
     }
 }
