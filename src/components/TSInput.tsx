@@ -1,13 +1,13 @@
 
 import * as React from 'react';
 import * as tabOverride from 'taboverride';
-import { parse, TimeSheet, TSError } from '../parser';
+import { parse, TimeSheet, PegjsError } from '../parser';
 import './App.css';
 
 export class TSInput extends React.Component<{
     style?: React.CSSProperties,
     onChange(text: string, result: TimeSheet[]): void,
-    onError(error: TSError): void,
+    onError(error: PegjsError): void,
 }, {}> {
     private textarea: HTMLTextAreaElement;
 
@@ -40,7 +40,7 @@ export class TSInput extends React.Component<{
             const result = parse(text);
             this.props.onChange(text, result);
         } catch (error) {
-            this.props.onError(error);
+            this.props.onError(error as PegjsError);
         }
 
     }

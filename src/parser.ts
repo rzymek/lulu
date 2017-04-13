@@ -1,18 +1,9 @@
 import * as moment from 'moment';
-import {hour} from './utils/utils';
+import { hour } from './utils/utils';
 declare function require(path: string): any;
 const grammar = require('./grammar.pegjs');
 
-export interface TimeSheet {
-    day: any;
-    total: string;
-    totalMinutes: number;
-    entries: any;
-}
-export interface TSError {
-}
-
-function now() {
+function now(): Time {
     const now = moment();
     return {
         h: now.hour(),
@@ -20,7 +11,7 @@ function now() {
     };
 }
 
-function processTimesheets(days: any[]): TimeSheet[] {
+function processTimesheets(days: ParserOutput[]): TimeSheet[] {
     const minutes = (time) => time.h * 60 + time.m;
     const append = (obj, key, value) => {
         if (obj[key] === undefined) {
@@ -68,4 +59,49 @@ export function parse(text): TimeSheet[] /* throws TSError */ {
     const days = grammar.parse(text);
     const result = processTimesheets(days);
     return result;
+}
+
+
+export interface TimeSheet {
+    day: string;
+    total: string;
+    totalMinutes: number;
+    entries: { [label: string]: string /*h:m*/ };
+}
+interface PegjsErrorLocation {
+    start: number,
+    line: number,
+    column: number
+};
+export interface PegjsError {
+    message: string,
+    expected: {
+        type: string,
+        description: string
+    }[],
+    found: string,
+    location: {
+        start: PegjsErrorLocation,
+        end: PegjsErrorLocation
+    },
+    name: string
+}
+interface Time {
+    h: number,
+    m: number
+}
+interface ParserOutput {
+    day: string,
+    start: Time,
+    ends: {
+        end: Time,
+        label: {
+            breaks: {
+                label: string,
+                time: Time
+            }[],
+            label: string
+        },
+        min: number
+    }[]
 }

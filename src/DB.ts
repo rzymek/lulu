@@ -21,7 +21,7 @@ export class DB {
       .push({ value, timestamp: new Date().toISOString() });
   }, 10 * 1000);
 
-  public login(): Promise<any> {
+  public login(): Promise<firebase.UserInfo> {
     const provider = new firebase.auth.GoogleAuthProvider();
     return new Promise((resolve) =>
       firebase.auth().onAuthStateChanged(user => {
@@ -78,7 +78,7 @@ export class DB {
     });
   }
 
-  public write(value: string): firebase.Promise<any> {
+  public write(value: string): firebase.Promise<undefined> {
     if (_.isNil(this.filename)) {
       return;
     }

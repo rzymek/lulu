@@ -2,19 +2,19 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import * as tabOverride from 'taboverride';
 import { DB } from '../DB';
-import { TimeSheet, TSError } from '../parser';
+import { TimeSheet, PegjsError } from '../parser';
 import './App.css';
 import { FileSelector } from './FileSelector';
 import { Results } from './Results';
 import { TSInput } from './TSInput';
 
 export class App extends React.Component<{}, {
-  error: any,
+  error: PegjsError,
   filename: string
   files: string[],
   loggedIn: boolean,
   publishing: boolean,
-  value: any[],
+  value: TimeSheet[],
 }> {
   private db = new DB();
   private input: TSInput;
@@ -105,7 +105,7 @@ export class App extends React.Component<{}, {
       });
   }
 
-  private handleError(error: TSError) {
+  private handleError(error: PegjsError) {
     this.setState({
       value: [],
       error,
