@@ -22,18 +22,18 @@ const config = {
                 dead_code: true,  // discard unreachable code
                 drop_debugger: false,  // discard “debugger” statements
                 unsafe: false, // some unsafe optimizations (see below)
-                conditionals: false,  // optimize if-s and conditional expressions
+                conditionals: true,  // optimize if-s and conditional expressions
                 comparisons: false,  // optimize comparisons
                 evaluate: true,  // evaluate constant expressions
                 booleans: false,  // optimize boolean expressions
                 loops: false,  // optimize loops
-                unused: false,  // drop unused variables/functions
+                unused: true,  // drop unused variables/functions
                 hoist_funs: false,  // hoist function declarations
                 hoist_vars: false, // hoist variable declarations
                 if_return: false,  // optimize if-s followed by return/continue
                 join_vars: false,  // join var declarations
                 cascade: false,  // try to cascade `right` into `left` in sequences
-                side_effects: false,  // drop side-effect-free statements
+                side_effects: true,  // drop side-effect-free statements
                 warnings: false,  // warn about potentially dangerous optimizations/code
                 global_defs: {}
             },
