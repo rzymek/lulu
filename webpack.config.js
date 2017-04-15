@@ -33,7 +33,7 @@ const config = {
                 if_return: false,  // optimize if-s followed by return/continue
                 join_vars: false,  // join var declarations
                 cascade: false,  // try to cascade `right` into `left` in sequences
-                side_effects: true,  // drop side-effect-free statements
+                side_effects: false,  // drop side-effect-free statements
                 warnings: false,  // warn about potentially dangerous optimizations/code
                 global_defs: {}
             },
