@@ -22,15 +22,15 @@ function processTimesheets(days: ParserOutput[]): TimeSheet[] {
         return obj;
     };
     return days.filter(day =>
-        day !== undefined
+        day !== undefined,
     ).map(day => {
         if (day.day === null) {
-             //break;
+            // break:
             return {
-                day:null,
-                entries:[],
+                day: null,
+                entries: [],
                 total: null,
-                totalMinutes: 0
+                totalMinutes: 0,
             };
         }
         day.ends.reduce((start, entry) => {
@@ -68,9 +68,7 @@ function processTimesheets(days: ParserOutput[]): TimeSheet[] {
 
 export function parse(text): TimeSheet[] /* throws TSError */ {
     const days: ParserOutput[] = grammar.parse(text);
-    console.log('days',days);
     const result = processTimesheets(days);
-    console.log('result',result);
     return result;
 }
 
