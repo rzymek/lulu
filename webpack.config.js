@@ -15,7 +15,7 @@ const config = {
         extensions: ['.js', '.ts', '.tsx']
     },
     plugins: [
-        new UglifyJSPlugin({
+        process.env.NODE_ENV === "production" && new UglifyJSPlugin({
             compress: {
                 sequences: true,  // join consecutive statemets with the “comma operator”
                 properties: true,  // optimize property access: a["foo"] → a.foo
@@ -44,7 +44,7 @@ const config = {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production')
         })
-    ],
+    ].filter(e => typeof e === "function"),
     module: {
         loaders: [
             { test: /\.pegjs$/, loader: 'pegjs-loader' },
