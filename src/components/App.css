@@ -47,3 +47,7 @@ th {
     background-color: lightblue;
     color: white;
 }
+
+hr {
+  clear: both;
+}

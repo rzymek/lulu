@@ -21,7 +21,18 @@ function processTimesheets(days: ParserOutput[]): TimeSheet[] {
         }
         return obj;
     };
-    return days.filter(day => day).map(day => {
+    return days.filter(day =>
+        day !== undefined
+    ).map(day => {
+        if (day.day === null) {
+             //break;
+            return {
+                day:null,
+                entries:[],
+                total: null,
+                totalMinutes: 0
+            };
+        }
         day.ends.reduce((start, entry) => {
             const end = entry.end || now();
             entry.min = minutes(end) - minutes(start);
@@ -56,8 +67,10 @@ function processTimesheets(days: ParserOutput[]): TimeSheet[] {
 }
 
 export function parse(text): TimeSheet[] /* throws TSError */ {
-    const days = grammar.parse(text);
+    const days: ParserOutput[] = grammar.parse(text);
+    console.log('days',days);
     const result = processTimesheets(days);
+    console.log('result',result);
     return result;
 }
 
