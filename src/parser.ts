@@ -11,16 +11,55 @@ function now(): Time {
     };
 }
 
+function part(s: string, nr: number): string {
+    const parts = s.split(/:/);
+    return parts[nr];
+}
+
+const minutes = (time) => time.h * 60 + time.m;
+const append = (obj, key, value) => {
+    if (obj[key] === undefined) {
+        obj[key] = value;
+    } else {
+        obj[key] += value;
+    }
+    return obj;
+};
+
+function processDay(day: ParserOutput, labelPart: number = 0): {
+    dayMinutes: StringMap;
+    total: number;
+} {
+    const dayMinutes = day.ends.map(entry => ({
+        breaks: entry.label.breaks || [],
+        label: part(entry.label.label, labelPart),
+        min: entry.min,
+    })).reduce((result, entry) => {
+        let min = entry.min;
+        entry.breaks.forEach(subentry => {
+            append(result, subentry.label, minutes(subentry.time));
+            min -= minutes(subentry.time);
+        });
+        append(result, entry.label, min);
+        return result;
+    }, {});
+    delete dayMinutes[''];
+    let total = 0;
+    Object.keys(dayMinutes).forEach(label => {
+        total += dayMinutes[label];
+        dayMinutes[label] = hour(dayMinutes[label]);
+    });
+    return {
+        dayMinutes,
+        total
+    }
+}
+function getSublabelsSumary(day: ParserOutput): { [label: string]: string /*h:m*/ } {
+    const {dayMinutes} = processDay(day, 1);
+    delete dayMinutes['undefined'];
+    return dayMinutes;
+}
 function processTimesheets(days: ParserOutput[]): TimeSheet[] {
-    const minutes = (time) => time.h * 60 + time.m;
-    const append = (obj, key, value) => {
-        if (obj[key] === undefined) {
-            obj[key] = value;
-        } else {
-            obj[key] += value;
-        }
-        return obj;
-    };
     return days.filter(day =>
         day !== undefined,
     ).map(day => {
@@ -28,9 +67,10 @@ function processTimesheets(days: ParserOutput[]): TimeSheet[] {
             // break:
             return {
                 day: null,
-                entries: [],
+                entries: {},
                 total: null,
                 totalMinutes: 0,
+                sublabels: {}
             };
         }
         day.ends.reduce((start, entry) => {
@@ -38,30 +78,13 @@ function processTimesheets(days: ParserOutput[]): TimeSheet[] {
             entry.min = minutes(end) - minutes(start);
             return end;
         }, day.start);
-        const dayMinutes = day.ends.map(entry => ({
-            breaks: entry.label.breaks || [],
-            label: entry.label.label,
-            min: entry.min,
-        })).reduce((result, entry) => {
-            let min = entry.min;
-            entry.breaks.forEach(subentry => {
-                append(result, subentry.label, minutes(subentry.time));
-                min -= minutes(subentry.time);
-            });
-            append(result, entry.label, min);
-            return result;
-        }, {});
-        delete dayMinutes[''];
-        let total = 0;
-        Object.keys(dayMinutes).forEach(label => {
-            total += dayMinutes[label];
-            dayMinutes[label] = hour(dayMinutes[label]);
-        });
+        const {dayMinutes, total} = processDay(day);
         return {
             day: day.day,
             entries: dayMinutes,
             total: hour(total),
             totalMinutes: total,
+            sublabels: getSublabelsSumary(day)
         };
     });
 }
@@ -72,11 +95,15 @@ export function parse(text): TimeSheet[] /* throws TSError */ {
     return result;
 }
 
+interface StringMap {
+    [label: string]: string /*h:m*/
+}
 export interface TimeSheet {
     day: string;
     total: string;
     totalMinutes: number;
-    entries: { [label: string]: string /*h:m*/ };
+    entries: StringMap;
+    sublabels: StringMap;
 }
 interface PegjsErrorLocation {
     start: number;

@@ -51,3 +51,7 @@ th {
 hr {
   clear: both;
 }
+
+.sublabel {
+  opacity: 0.5
+}
