@@ -5,6 +5,7 @@
         "quotemark": [true, "single", "jsx-double"],
         "interface-name": [true, "never-prefix"],
         "no-empty-interface": false,
+        "no-string-literal": false,
         "no-var-requires": false /* workaround for require'ing pegjs parser */
     }
 }

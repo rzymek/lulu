@@ -13,7 +13,7 @@ const EntriesRows = (entries: {}, className?: string) => _(entries)
       <th>{e.label}</th>
       <td>{e.time}</td>
     </tr>)
-  .value()
+  .value();
 
 export class Results extends React.Component<{ value: TimeSheet[] }, {}> {
   public render() {
@@ -48,7 +48,7 @@ export class Results extends React.Component<{ value: TimeSheet[] }, {}> {
               <th>{day.total}</th>
             </tr>
             {EntriesRows(day.entries)}
-            {EntriesRows(day.sublabels, "sublabel")}
+            {EntriesRows(day.sublabels, 'sublabel')}
           </tbody>
         </table>)}
     </div>;

@@ -51,8 +51,8 @@ function processDay(day: ParserOutput, labelPart: number = 0): {
     });
     return {
         dayMinutes,
-        total
-    }
+        total,
+    };
 }
 function getSublabelsSumary(day: ParserOutput): { [label: string]: string /*h:m*/ } {
     const {dayMinutes} = processDay(day, 1);
@@ -68,9 +68,9 @@ function processTimesheets(days: ParserOutput[]): TimeSheet[] {
             return {
                 day: null,
                 entries: {},
+                sublabels: {},
                 total: null,
                 totalMinutes: 0,
-                sublabels: {}
             };
         }
         day.ends.reduce((start, entry) => {
@@ -82,9 +82,9 @@ function processTimesheets(days: ParserOutput[]): TimeSheet[] {
         return {
             day: day.day,
             entries: dayMinutes,
+            sublabels: getSublabelsSumary(day),
             total: hour(total),
             totalMinutes: total,
-            sublabels: getSublabelsSumary(day)
         };
     });
 }
@@ -96,7 +96,7 @@ export function parse(text): TimeSheet[] /* throws TSError */ {
 }
 
 interface StringMap {
-    [label: string]: string /*h:m*/
+    [label: string]: string /*h:m*/;
 }
 export interface TimeSheet {
     day: string;

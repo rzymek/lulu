@@ -7,7 +7,7 @@ export function hour(minutes: number): string {
     return Math.floor(minutes / 60) + ':' + pad(minutes % 60);
 }
 
-export function toMinutes(time:string):number {
-    const [h,m] = time.split(/:/);
-    return Number(h)*60+Number(m);
+export function toMinutes(time: string): number {
+    const [h, m] = time.split(/:/);
+    return Number(h) * 60 + Number(m);
 }
