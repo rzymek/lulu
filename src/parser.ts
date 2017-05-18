@@ -37,7 +37,11 @@ function processDay(day: ParserOutput, labelPart: number = 0): {
     })).reduce((result, entry) => {
         let min = entry.min;
         entry.breaks.forEach(subentry => {
-            append(result, subentry.label, minutes(subentry.time));
+            append(
+                result,
+                part(subentry.label, labelPart),
+                minutes(subentry.time),
+            );
             min -= minutes(subentry.time);
         });
         append(result, entry.label, min);
@@ -54,11 +58,13 @@ function processDay(day: ParserOutput, labelPart: number = 0): {
         total,
     };
 }
+
 function getSublabelsSumary(day: ParserOutput): { [label: string]: string /*h:m*/ } {
     const {dayMinutes} = processDay(day, 1);
     delete dayMinutes['undefined'];
     return dayMinutes;
 }
+
 function processTimesheets(days: ParserOutput[]): TimeSheet[] {
     return days.filter(day =>
         day !== undefined,
