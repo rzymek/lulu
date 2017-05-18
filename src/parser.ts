@@ -12,7 +12,7 @@ function now(): Time {
 }
 
 function part(s: string, nr: number): string {
-    const parts = s.split(/:/);
+    const parts = s.split('|');
     return parts[nr];
 }
 
