@@ -27,21 +27,13 @@ export class Results extends React.Component<{ value: TimeSheet[] }, {}> {
       , {})
       .mapValues(hour)
       .value();
+    const weeks = this.getWeeks();
     return <div>
       <h1 style={{ fontSize: 16 }}>
         Total: {hour(total)}({(total / 60).toFixed(2)}h)
       </h1>
-      {!_.isEmpty(sublabelsTotal) && <table>
-        <tbody>
-          <tr>
-              <th colSpan={2}>Sublabels</th>
-            </tr>
-          {EntriesRows(sublabelsTotal)}
-        </tbody>
-      </table>}
-      {this.props.value.map((day, idx) => day.day === null
-        ? <hr />
-        : <table key={idx}>
+      {weeks.map((week, idx) => <div key={idx} className="week">
+        {week.map((day, key) => <table key={key}>
           <tbody >
             <tr>
               <th>Day: {day.day}</th>
@@ -51,6 +43,27 @@ export class Results extends React.Component<{ value: TimeSheet[] }, {}> {
             {EntriesRows(day.sublabels, 'sublabel')}
           </tbody>
         </table>)}
+      </div>)}
+
+      {!_.isEmpty(sublabelsTotal) && <table className="sublabels">
+        <tbody>
+          <tr>
+            <th colSpan={2}>Sublabels</th>
+          </tr>
+          {EntriesRows(sublabelsTotal)}
+        </tbody>
+      </table>}
     </div>;
+  }
+  private getWeeks() {
+    let group = 0;
+    return _(this.props.value).groupBy(v => {
+      if (v.day == null) {
+        group++;
+        return null;
+      } else {
+        return group;
+      }
+    }).omit('null').values().reverse().value();
   }
 }
