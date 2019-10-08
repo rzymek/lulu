@@ -4,12 +4,17 @@ Webapp for processing a custom timesheet DSL.
 The result is a summary of all the mentioned entries.
 
 ## Motivation 
-My usual workflow consist of switching back and forth between separatly billable projects. The way I came to tackle the billing is to write down the time when I switch and to what. Sometimes I need to write or modify this information after the fact. Initally I was writing this down in a text file backed on Dropbox. At the end of the billing perion I needed to spend some time calculating the actual time spend on each project by adding differences betting end and start times. 
+My usual workflow consist of switching back and forth between separately billable projects. 
+The way I came to tackle the billing is to write down the time when I switch and to what. 
+Sometimes I need to write or modify this information after the fact. 
+Initially I was writing this down in a text file backed on Dropbox. 
+At the end of the billing period I needed to spend some time calculating the actual time 
+spend on each project by adding differences betting end and start times. 
 This project came out to be to automate this process.
 
 
 ## DSL Example
-The follwing text:
+The following text:
 ```
 05	8:15-project1-(0:30 project2)-12:00--13:00-project1-16:00
 06	8:45-project2-12:30
@@ -30,3 +35,11 @@ produces:
 * [webpack2](https://webpack.js.org/) for bundling
 * [pegjs](https://pegjs.org/) - the parser generator
 * [typescript](https://www.typescriptlang.org/) 
+
+## Dev Mode
+
+```
+cp public/index.html build/
+yarn start
+```
+Go to http://localhost:8080/build/index.html
