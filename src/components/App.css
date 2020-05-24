@@ -55,6 +55,6 @@ hr {
 .sublabel {
   opacity: 0.5
 }
-.week, .sublabels {
+.week {
   clear: left;
 }

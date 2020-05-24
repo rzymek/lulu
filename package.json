@@ -9,6 +9,8 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "devDependencies": {
+    "@types/react": "^15.0.7",
+    "@types/react-dom": "^0.14.23",
     "@types/pegjs": "^0.10.0",
     "css-loader": "^0.28.0",
     "pegjs-loader": "^0.5.1",
@@ -22,8 +24,6 @@
     "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
-    "@types/react": "^15.0.7",
-    "@types/react-dom": "^0.14.23",
     "firebase": "^3.7.6",
     "lodash": "^4.17.15",
     "moment": "^2.18.1",
