@@ -1,0 +1,60 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+table {
+    border-collapse: collapse;
+    float:left;
+    margin: 5px;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+    border:solid 1px gray;
+}
+
+tr:first-child > th {
+  background-color: darkgray;
+}
+
+tr:nth-child(even){
+  background-color: #f2f2f2
+}
+
+th {
+    background-color: lightblue;
+    color: white;
+}
+
+hr {
+  clear: both;
+}
+
+.sublabel {
+  opacity: 0.5
+}
+.week {
+  clear: left;
+}
