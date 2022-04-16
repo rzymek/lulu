@@ -1,10 +1,9 @@
-import firebase from 'firebase/app';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import {App} from './components/App';
+import { initializeApp } from 'firebase/app';
+import { render } from 'react-dom';
+import { App } from './components/App';
 import './index.css';
 
-firebase.initializeApp({
+initializeApp({
   apiKey: 'AIzaSyCvK-h0vpW8cP92RSzOnxmk2B6PMUT0nNs',
   authDomain: 'lulu-38151.firebaseapp.com',
   databaseURL: 'https://lulu-38151.firebaseio.com',
@@ -12,7 +11,7 @@ firebase.initializeApp({
   storageBucket: 'lulu-38151.appspot.com',
 });
 
-ReactDOM.render(
+render(
   <App />,
   document.getElementById('root'),
 );

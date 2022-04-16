@@ -9,10 +9,12 @@ export class TSInput extends React.Component<{
     onChange(text: string, result: TimeSheet[]): void,
     onError(error: PegjsError): void,
 }, {}> {
-    private textarea: HTMLTextAreaElement;
+    private textarea: HTMLTextAreaElement | null = null;
 
     public setText(text: string): void {
-        this.textarea.value = text;
+        if (this.textarea) {
+            this.textarea.value = text;
+        }
         this.processText(text); // TODO: maybe unnessesary
     }
 
@@ -31,7 +33,7 @@ export class TSInput extends React.Component<{
     }
 
     private handleChange() {
-        const {value} = this.textarea;
+        const { value } = this.textarea || { value: '' };
         this.processText(value);
     }
 

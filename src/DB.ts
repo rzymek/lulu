@@ -1,7 +1,6 @@
-import * as firebase from 'firebase/app';
 import { DatabaseReference, getDatabase, ref, push, get, onValue, off, set } from 'firebase/database';
 import { UserInfo, getAuth, GoogleAuthProvider, signInWithRedirect } from 'firebase/auth';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { v4 as uuid } from 'uuid';
 
 const UUID = uuid();

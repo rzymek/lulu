@@ -14,8 +14,7 @@ export class FileSelector extends React.Component<{
         </select>;
     }
 
-    private handleChange(e: Event) {
-        const select = e.target as HTMLSelectElement;
-        this.props.onChange(select.value);
+    private handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+        this.props.onChange(e.target.value);
     }
 }

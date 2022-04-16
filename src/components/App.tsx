@@ -1,6 +1,6 @@
-import * as _ from 'lodash';
-import * as React from 'react';
-import * as tabOverride from 'taboverride';
+import _ from 'lodash';
+import React from 'react';
+import tabOverride from 'taboverride';
 import { DB } from '../DB';
 import { PegjsError, TimeSheet } from '../parser';
 import './App.css';
@@ -9,7 +9,7 @@ import { Results } from './Results';
 import { TSInput } from './TSInput';
 
 export class App extends React.Component<{}, {
-  error: PegjsError,
+  error: PegjsError | undefined,
   filename: string
   files: string[],
   loggedIn: boolean,
@@ -17,7 +17,7 @@ export class App extends React.Component<{}, {
   value: TimeSheet[],
 }> {
   private db = new DB();
-  private input: TSInput;
+  private input: TSInput|null = null;
   private publishedText = '';
 
   private persist = _.debounce(
@@ -26,8 +26,8 @@ export class App extends React.Component<{}, {
     { leading: true },
   );
 
-  constructor() {
-    super();
+  constructor(props: {}) {
+    super(props);
     this.state = {
       error: undefined,
       filename: 'default',
@@ -72,7 +72,7 @@ export class App extends React.Component<{}, {
 
   private newFile() {
     const filename = prompt('Enter filename');
-    if (_.isEmpty(filename)) {
+    if (!filename || _.isEmpty(filename)) {
       return;
     }
     this.openFile(filename);
@@ -84,7 +84,7 @@ export class App extends React.Component<{}, {
     });
     this.db.subscribe(filename, (value: string) => {
       this.publishedText = value;
-      this.input.setText(value);
+      this.input?.setText(value);
     });
   }
 

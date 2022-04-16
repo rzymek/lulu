@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import { hour } from './utils/utils';
 declare function require(path: string): any;
 const grammar = require('./grammar.pegjs');
@@ -16,12 +16,12 @@ function part(s: string, nr: number): string {
     return parts[nr];
 }
 
-const minutes = (time) => time.h * 60 + time.m;
-const append = (obj, key, value) => {
+const minutes = (time: { h: number, m: number }) => time.h * 60 + time.m;
+const append = (obj: Record<string, number | string>, key: string, value: number) => {
     if (obj[key] === undefined) {
         obj[key] = value;
     } else {
-        obj[key] += value;
+        (obj[key] as number) += value;
     }
     return obj;
 };
@@ -46,21 +46,21 @@ function processDay(day: ParserOutput, labelPart: number = 0): {
         });
         append(result, entry.label, min);
         return result;
-    }, {});
+    }, {} as Record<string, number | string>);
     delete dayMinutes[''];
     let total = 0;
     Object.keys(dayMinutes).forEach(label => {
-        total += dayMinutes[label];
-        dayMinutes[label] = hour(dayMinutes[label]);
+        total += dayMinutes[label] as number;
+        dayMinutes[label] = hour(dayMinutes[label] as number);
     });
     return {
-        dayMinutes,
+        dayMinutes: dayMinutes as StringMap,
         total,
     };
 }
 
 function getSublabelsSumary(day: ParserOutput): { [label: string]: string /*h:m*/ } {
-    const {dayMinutes} = processDay(day, 1);
+    const { dayMinutes } = processDay(day, 1);
     delete dayMinutes['undefined'];
     return dayMinutes;
 }
@@ -84,7 +84,7 @@ function processTimesheets(days: ParserOutput[]): TimeSheet[] {
             entry.min = minutes(end) - minutes(start);
             return end;
         }, day.start);
-        const {dayMinutes, total} = processDay(day);
+        const { dayMinutes, total } = processDay(day);
         return {
             day: day.day,
             entries: dayMinutes,
@@ -95,7 +95,7 @@ function processTimesheets(days: ParserOutput[]): TimeSheet[] {
     });
 }
 
-export function parse(text): TimeSheet[] /* throws TSError */ {
+export function parse(text: string): TimeSheet[] /* throws TSError */ {
     const days: ParserOutput[] = grammar.parse(text);
     const result = processTimesheets(days);
     return result;
@@ -105,8 +105,8 @@ interface StringMap {
     [label: string]: string /*h:m*/;
 }
 export interface TimeSheet {
-    day: string;
-    total: string;
+    day: string | null;
+    total: string | null;
     totalMinutes: number;
     entries: StringMap;
     sublabels: StringMap;
