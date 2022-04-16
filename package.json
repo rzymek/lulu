@@ -9,13 +9,15 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@types/xlsx": "^0.0.36",
     "firebase": "^9.6.11",
     "lodash": "^4.17.21",
     "moment": "^2.29.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "taboverride": "^4.0.3",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.181",

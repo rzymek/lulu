@@ -49,7 +49,7 @@ export class DB {
   }
 
   public subscribe(filename: string, callback: (value: string) => void) {
-    if(this.currentRef) {
+    if (this.currentRef) {
       off(this.currentRef);
     }
 
@@ -75,6 +75,19 @@ export class DB {
         callback(entry.value);
       }
     });
+  }
+
+  public async exportAll() {
+    const filesSnapshot = await get(ref(database, `${this.user?.uid}/files`));
+    const files = filesSnapshot.val() as FileList;
+
+    return Promise.all(
+      Object.entries(files).map(async ([id, filename]) => {
+        const snapshot = await get(ref(database, `${this.user?.uid}/timesheets/${filename}`));
+        const text = snapshot.val().value;
+        return { filename, text };
+      })
+    );
   }
 
   public async write(value: string): Promise<undefined> {

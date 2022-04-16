@@ -4,7 +4,7 @@ Timesheet
 Day
 	= "#" [^\n]*                            { return undefined }
 	/ "---"								    { return {day:null} } //break
-	/ day:[^ \t]+ _ start:Time ends:End*	{ return {day,start,ends}}
+	/ day:[^ \t]+ _ start:Time ends:End*	{ return {day:day.join(''),start,ends}}
     / _									    { return undefined } 
 Time
 	= h:Num ":" m:Minutes { return {h,m}}

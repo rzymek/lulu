@@ -7,6 +7,7 @@ import './App.css';
 import { FileSelector } from './FileSelector';
 import { Results } from './Results';
 import { TSInput } from './TSInput';
+import { XlsxExport } from './XlsxExport';
 
 export class App extends React.Component<{}, {
   error: PegjsError | undefined,
@@ -44,6 +45,7 @@ export class App extends React.Component<{}, {
         value={this.state.filename}
         onChange={this.openFile.bind(this)} />
       <button onClick={this.newFile.bind(this)}>+</button>
+      <XlsxExport db={this.db}/>
       <TSInput
         ref={input => this.input = input}
         style={{
