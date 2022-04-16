@@ -1,7 +1,6 @@
 import moment from 'moment';
 import { hour } from './utils/utils';
-declare function require(path: string): any;
-const grammar = require('./grammar.pegjs');
+import grammar from './grammar.pegjs';
 
 function now(): Time {
     const noww = moment();
