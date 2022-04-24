@@ -4,6 +4,9 @@ export function roundTo5(v: number): number {
 
 const pad = (m: number) => m < 10 ? '0' + m : m;
 export function hour(minutes: number): string {
+    if (minutes < 0) {
+        return `-${hour(-minutes)}`;
+    }
     return Math.floor(minutes / 60) + ':' + pad(minutes % 60);
 }
 

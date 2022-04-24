@@ -18,6 +18,7 @@ const EntriesRows = (entries: {}, className?: string) => _(entries)
 export class Results extends React.Component<{ value: TimeSheet[] }, {}> {
     public render() {
         const total = _(this.props.value).map(day => day.totalMinutes).sum();
+        const balance = _(this.props.value).map(day => day.totalMinutes < 8*60/2 ? day.totalMinutes : day.totalMinutes - 8*60).sum();
         const sublabelsTotal = _.chain(this.props.value)
             .filter(day => day.day !== null)
             .map(day => day.sublabels)
@@ -41,6 +42,7 @@ export class Results extends React.Component<{ value: TimeSheet[] }, {}> {
         return <div>
             <h1 style={{ fontSize: 16 }}>
                 Total: {hour(total)}({(total / 60).toFixed(2)}h)
+                Balance: {hour(balance)}
             </h1>
             {weeks.map((week, idx) => <div key={idx} className="week">
                 {week.map((day, key) => <table key={key}>
